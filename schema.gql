@@ -9,22 +9,11 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 scalar DateTime
 
 type Mutation {
-  register(registerInputData: RegisterInputData!): User!
+  register(registerInputData: UserRegisterInput!): UserRegisterResult!
 }
 
 type Query {
   me: String!
-}
-
-input RegisterInputData {
-  birthday: DateTime!
-  career: String!
-  description: String!
-  fatherLastName: String!
-  motherLastName: String!
-  name: String!
-  studentCode: String!
-  studentNip: String!
 }
 
 type User {
@@ -39,4 +28,33 @@ type User {
   primaryImageUrn: String!
   secondaryImagesUrn: [String!]!
   updatedAt: DateTime!
+}
+
+input UserRegisterInput {
+  birthday: DateTime!
+  career: String!
+  description: String!
+  fatherLastName: String!
+  motherLastName: String!
+  name: String!
+  studentCode: String!
+  studentNip: String!
+}
+
+type UserRegisterInvalidInputError {
+  birthday: DateTime
+  career: String
+  description: String
+  fatherLastName: String
+  message: String!
+  motherLastName: String
+  name: String
+  studentCode: String
+  studentNip: String
+}
+
+union UserRegisterResult = UserRegisterInvalidInputError | UserRegisterResultSuccess
+
+type UserRegisterResultSuccess {
+  user: User!
 }

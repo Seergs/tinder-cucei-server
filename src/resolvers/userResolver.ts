@@ -1,45 +1,12 @@
-import { Resolver, Mutation, Query, InputType, Field, Arg } from "type-graphql";
-import { Length, IsDate, IsNotEmpty } from "class-validator";
+import { Resolver, Mutation, Query, Arg } from "type-graphql";
+import {
+  UserRegisterResult,
+  UserRegisterInput,
+  UserRegisterInvalidInputError,
+  UserRegisterResultSuccess,
+} from "../types/graphql/registerTypes";
 import User from "../entities/User";
 import careers from "../util/careers";
-import { UserInputError } from "apollo-server-express";
-
-@InputType()
-class RegisterInputData {
-  @Field()
-  @IsNotEmpty({ message: "No puede estar vacío" })
-  name: string;
-
-  @Field()
-  @IsNotEmpty({ message: "No puede estar vacío" })
-  fatherLastName: string;
-
-  @Field()
-  @IsNotEmpty({ message: "No puede estar vacío" })
-  motherLastName: string;
-
-  @Field()
-  @IsNotEmpty({ message: "No puede estar vacío" })
-  career: string;
-
-  @Field()
-  @IsNotEmpty({ message: "No puede estar vacío" })
-  description: string;
-
-  @Field()
-  @IsDate({ message: "Fecha inválida" })
-  birthday: Date;
-
-  @Field()
-  @Length(9, 9, {
-    message: "No válido, debe ser un código de estudiante de UDG",
-  })
-  studentCode: string;
-
-  @Field()
-  @IsNotEmpty({ message: "No puede estar vacío" })
-  studentNip: string;
-}
 
 @Resolver()
 export default class UserResolver {
@@ -47,16 +14,22 @@ export default class UserResolver {
   async me() {
     return "Me";
   }
-  @Mutation(() => User)
+  @Mutation(() => UserRegisterResult)
   async register(
-    @Arg("registerInputData") inputData: RegisterInputData
-  ): Promise<User> {
+    @Arg("registerInputData") inputData: UserRegisterInput
+  ): Promise<typeof UserRegisterResult> {
+    let errors: any = {};
     if (!Object.keys(careers).includes(inputData.career)) {
-      throw new UserInputError("User Input Error", { career: "No encontrada" });
+      errors.career = "Carrera no encontrada";
     }
+
+    if (Object.keys(errors).length) {
+      return new UserRegisterInvalidInputError(errors);
+    }
+
     const newUser = new User({ ...inputData });
     const user = await newUser.save();
 
-    return user;
+    return new UserRegisterResultSuccess(user);
   }
 }
