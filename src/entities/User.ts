@@ -16,7 +16,11 @@ export default class User extends Entity {
 
   @Field(() => String)
   @Column()
-  lastName: string;
+  fatherLastName: string;
+
+  @Field(() => String)
+  @Column()
+  motherLastName: string;
 
   @Field(() => String)
   @Column()
@@ -31,7 +35,7 @@ export default class User extends Entity {
   birthday: Date;
 
   @Field(() => String)
-  @Column()
+  @Column({ nullable: true })
   primaryImageUrn: string;
 
   @Field(() => [String])
