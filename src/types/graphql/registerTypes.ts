@@ -11,7 +11,7 @@ export class UserRegisterResultSuccess {
 }
 
 @ObjectType()
-export class UserRegisterInvalidInputError implements Partial<User> {
+export class UserRegisterInvalidInputError {
   constructor(userRegisterInputErrors: Partial<UserRegisterInvalidInputError>) {
     Object.assign(this, userRegisterInputErrors);
     this.message = "Invalid Input Error";
@@ -35,7 +35,7 @@ export class UserRegisterInvalidInputError implements Partial<User> {
   description?: string;
 
   @Field({ nullable: true })
-  birthday?: Date;
+  dateOfBirth?: string;
 
   @Field({ nullable: true })
   studentCode?: string;
@@ -61,7 +61,7 @@ export class UserRegisterInput implements Partial<User> {
   description: string;
 
   @Field()
-  birthday: Date;
+  dateOfBirth: string;
 
   @Field()
   studentCode: string;

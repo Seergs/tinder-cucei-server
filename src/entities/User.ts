@@ -31,7 +31,7 @@ export default class User extends Entity {
   description: string;
 
   @Field(() => Date)
-  @Column({ type: "date" })
+  @Column("date")
   birthday: Date;
 
   @Field(() => String)

@@ -31,8 +31,8 @@ type User {
 }
 
 input UserRegisterInput {
-  birthday: DateTime!
   career: String!
+  dateOfBirth: String!
   description: String!
   fatherLastName: String!
   motherLastName: String!
@@ -42,8 +42,8 @@ input UserRegisterInput {
 }
 
 type UserRegisterInvalidInputError {
-  birthday: DateTime
   career: String
+  dateOfBirth: String
   description: String
   fatherLastName: String
   message: String!

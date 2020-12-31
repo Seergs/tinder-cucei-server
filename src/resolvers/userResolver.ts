@@ -6,7 +6,8 @@ import {
   UserRegisterResultSuccess,
 } from "../types/graphql/registerTypes";
 import User from "../entities/User";
-import careers from "../util/careers";
+import { validateInputData } from "../validators/register";
+import { parseDate } from "../util/utils";
 
 @Resolver()
 export default class UserResolver {
@@ -18,16 +19,15 @@ export default class UserResolver {
   async register(
     @Arg("registerInputData") inputData: UserRegisterInput
   ): Promise<typeof UserRegisterResult> {
-    let errors: any = {};
-    if (!Object.keys(careers).includes(inputData.career)) {
-      errors.career = "Carrera no encontrada";
-    }
-
+    const errors = validateInputData(inputData);
     if (Object.keys(errors).length) {
       return new UserRegisterInvalidInputError(errors);
     }
 
-    const newUser = new User({ ...inputData });
+    const newUser = new User({
+      ...inputData,
+      birthday: parseDate(inputData.dateOfBirth),
+    });
     const user = await newUser.save();
 
     return new UserRegisterResultSuccess(user);
