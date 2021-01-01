@@ -9,6 +9,7 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 scalar DateTime
 
 type Mutation {
+  login(loginInputData: UserLoginInput!): UserLoginResult!
   register(registerInputData: UserRegisterInput!): UserRegisterResult!
 }
 
@@ -30,6 +31,24 @@ type User {
   updatedAt: DateTime!
 }
 
+input UserLoginInput {
+  studentCode: String!
+  studentNip: String!
+}
+
+type UserLoginInvalidInputError {
+  credentials: String
+  message: String!
+  studentCode: String
+  studentNip: String
+}
+
+union UserLoginResult = UserLoginInvalidInputError | UserLoginResultSuccess
+
+type UserLoginResultSuccess {
+  user: User!
+}
+
 input UserRegisterInput {
   career: String!
   dateOfBirth: String!
@@ -43,6 +62,7 @@ input UserRegisterInput {
 
 type UserRegisterInvalidInputError {
   career: String
+  credentials: String
   dateOfBirth: String
   description: String
   fatherLastName: String
