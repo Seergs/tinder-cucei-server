@@ -15,7 +15,7 @@ import {
 
 import User from "../entities/User";
 import { validateInputData } from "../validators/register";
-import { parseDate } from "../util/utils";
+import { parseDate, parseCookies } from "../util/utils";
 
 @Resolver()
 export default class UserResolver {
@@ -31,14 +31,14 @@ export default class UserResolver {
     const errors = validateInputData(inputData);
 
     // Credentials validation
-    if (
-      !(await isLoginToSiiauSuccessful(
-        inputData.studentCode,
-        inputData.studentNip
-      ))
-    ) {
-      errors.credentials = "Credenciales incorrectas";
-    }
+    const {
+      campus: campusError,
+      credentials: credentialsError,
+    } = await loginToSiiau(inputData.studentCode, inputData.studentNip);
+
+    if (campusError) errors.campus = campusError;
+    if (credentialsError) errors.credentials = credentialsError;
+
     if (Object.keys(errors).length) {
       return new UserRegisterInvalidInputError(errors);
     }
@@ -61,13 +61,24 @@ export default class UserResolver {
   }
 }
 
-async function isLoginToSiiauSuccessful(
+type loginToSiiauErrors = {
+  credentials: string | null;
+  campus: string | null;
+};
+
+async function loginToSiiau(
   studentCode: string,
   studentNip: string
-) {
+): Promise<loginToSiiauErrors> {
+  let errors: loginToSiiauErrors = {
+    campus: null,
+    credentials: null,
+  };
+
   const credentials = new FormData();
   credentials.append("p_codigo_c", studentCode);
   credentials.append("p_clave_c", studentNip);
+
   const response = await fetch(
     `http://siiauescolar.siiau.udg.mx/wus/gupprincipal.valida_inicio`,
     { body: credentials, method: "POST" }
@@ -75,5 +86,39 @@ async function isLoginToSiiauSuccessful(
 
   const pageText = await response.text();
 
-  return !pageText.includes('class="error"');
+  if (pageText.includes('class="error"')) {
+    errors.credentials = "Credenciales incorrectas";
+    return errors;
+  }
+
+  const cookiesUnparsed = response.headers.get("set-cookie");
+  const cookies = parseCookies(cookiesUnparsed!);
+
+  const pidmSelector = '<INPUT TYPE="hidden" NAME="p_pidm_n" VALUE="';
+
+  const pidmStartIndex = pageText.indexOf(pidmSelector);
+
+  const pidmSelectorLength = pidmSelector.length;
+
+  const pidmIndex = pidmStartIndex + pidmSelectorLength;
+
+  const pidm = pageText.substring(pidmIndex, pidmIndex + 7);
+
+  if (!(await isCuceiStudent(pidm, cookies))) {
+    errors.campus = "Esta app solo está diseñada para estudiantes de CUCEI";
+  }
+
+  return errors;
+}
+
+async function isCuceiStudent(pidm: string, cookies: string) {
+  const response = await fetch(
+    `http://siiauescolar.siiau.udg.mx/wal/sgphist.promedio?pidmp=${pidm}`,
+    { headers: { cookie: cookies } }
+  );
+  const pageText = await response.text();
+
+  return pageText.includes(
+    "CENTRO UNIVERSITARIO DE CIENCIAS EXACTAS E INGENIERIAS"
+  );
 }
