@@ -61,6 +61,7 @@ input UserRegisterInput {
 }
 
 type UserRegisterInvalidInputError {
+  campus: String
   career: String
   credentials: String
   dateOfBirth: String

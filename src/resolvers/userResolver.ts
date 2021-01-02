@@ -1,5 +1,6 @@
 import { Resolver, Mutation, Query, Arg } from "type-graphql";
-import puppeteer from "puppeteer";
+import fetch from "node-fetch";
+import FormData from "form-data";
 import {
   UserRegisterResult,
   UserRegisterInput,
@@ -64,41 +65,15 @@ async function isLoginToSiiauSuccessful(
   studentCode: string,
   studentNip: string
 ) {
-  const browser = await puppeteer.launch({
-    args: [
-      "--disable-gpu",
-      "--disable-dev-shm-usage",
-      "--disable-setuid-sandbox",
-      "--no-first-run",
-      "--no-sandbox",
-      "--no-zygote",
-      "--single-process",
-    ],
-  });
-  const page = await browser.newPage();
-  console.log("Navigating to SIIAU");
-  await page.goto(
-    "http://siiauescolar.siiau.udg.mx/wus/gupprincipal.forma_inicio"
+  const credentials = new FormData();
+  credentials.append("p_codigo_c", studentCode);
+  credentials.append("p_clave_c", studentNip);
+  const response = await fetch(
+    `http://siiauescolar.siiau.udg.mx/wus/gupprincipal.valida_inicio`,
+    { body: credentials, method: "POST" }
   );
 
-  console.log("Inicial url", page.url());
+  const pageText = await response.text();
 
-  console.log("Typing credentials");
-  await page.type("input[name=p_codigo_c]", studentCode);
-  await page.type("input[name=p_clave_c]", studentNip);
-
-  console.log("Submitting");
-  await page.click("input[type=submit]");
-
-  console.log("Waiting for new page");
-  await page.waitForNavigation();
-
-  const newPage = page.url();
-  console.log("New url", newPage);
-
-  await browser.close();
-
-  return (
-    newPage === "http://siiauescolar.siiau.udg.mx/wus/gupprincipal.FrameMenu"
-  );
+  return !pageText.includes('class="error"');
 }

@@ -45,6 +45,9 @@ export class UserRegisterInvalidInputError {
 
   @Field({ nullable: true })
   credentials?: string;
+
+  @Field({ nullable: true })
+  campus?: string;
 }
 @InputType()
 export class UserRegisterInput implements Partial<User> {
