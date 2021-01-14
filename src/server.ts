@@ -1,3 +1,7 @@
+import { config } from "dotenv";
+
+config();
+
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { buildSchema } from "type-graphql";
@@ -6,7 +10,7 @@ import express from "express";
 
 import UserResolver from "./resolvers/userResolver";
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 async function main() {
   await createConnection();

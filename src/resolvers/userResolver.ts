@@ -1,9 +1,9 @@
 import { Resolver, Mutation, Query, Arg } from "type-graphql";
-import fetch from "node-fetch";
 import FormData from "form-data";
+import fetch from "node-fetch";
 import {
-  UserRegisterResult,
   UserRegisterInput,
+  UserRegisterResult,
   UserRegisterInvalidInputError,
   UserRegisterResultSuccess,
 } from "../types/graphql/registerTypes";
@@ -12,10 +12,9 @@ import {
   UserLoginInput,
   UserLoginInvalidInputError,
 } from "../types/graphql/loginTypes";
-
-import User from "../entities/User";
 import { validateInputData } from "../validators/register";
-import { parseDate, parseCookies } from "../util/utils";
+import User from "../entities/User";
+import { parseCookies, parseDate } from "../util/utils";
 
 @Resolver()
 export default class UserResolver {
@@ -23,12 +22,19 @@ export default class UserResolver {
   async me() {
     return "Me";
   }
+
   @Mutation(() => UserRegisterResult)
   async register(
     @Arg("registerInputData") inputData: UserRegisterInput
   ): Promise<typeof UserRegisterResult> {
     // User input validation
     const errors = validateInputData(inputData);
+
+    // Validate user registered already
+    if (await User.count({ studentCode: inputData.studentCode })) {
+      errors.studentCode =
+        "Ya existe una cuenta asociada a este código, intenta iniciar sesión";
+    }
 
     // Credentials validation
     const {
@@ -45,7 +51,7 @@ export default class UserResolver {
 
     const newUser = new User({
       ...inputData,
-      birthday: parseDate(inputData.dateOfBirth),
+      birthday: parseDate(inputData.birthday),
     });
     const user = await newUser.save();
 

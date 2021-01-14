@@ -22,12 +22,13 @@ type User {
   career: String!
   createdAt: DateTime!
   description: String!
-  fatherLastName: String!
+  firstName: String!
+  gender: String!
   id: String!
-  motherLastName: String!
-  name: String!
-  primaryImageUrn: String!
-  secondaryImagesUrn: [String!]!
+  lastName: String!
+  primaryImageUrl: String!
+  secondaryImagesUrl: [String!]!
+  studentCode: String!
   updatedAt: DateTime!
 }
 
@@ -50,26 +51,28 @@ type UserLoginResultSuccess {
 }
 
 input UserRegisterInput {
+  birthday: String!
   career: String!
-  dateOfBirth: String!
   description: String!
-  fatherLastName: String!
-  motherLastName: String!
-  name: String!
+  firstName: String!
+  gender: String!
+  lastName: String!
+  primaryImageUrl: String!
+  secondaryImagesUrl: [String!]!
   studentCode: String!
   studentNip: String!
 }
 
 type UserRegisterInvalidInputError {
+  birthday: String
   campus: String
   career: String
   credentials: String
-  dateOfBirth: String
   description: String
-  fatherLastName: String
-  message: String!
-  motherLastName: String
-  name: String
+  firstName: String
+  gender: String
+  lastName: String
+  primaryImageUrl: String
   studentCode: String
   studentNip: String
 }

@@ -10,55 +10,22 @@ export class UserRegisterResultSuccess {
   user: User;
 }
 
-@ObjectType()
-export class UserRegisterInvalidInputError {
-  constructor(userRegisterInputErrors: Partial<UserRegisterInvalidInputError>) {
-    Object.assign(this, userRegisterInputErrors);
-    this.message = "Invalid Input Error";
-  }
-  @Field()
-  message: string;
-
-  @Field({ nullable: true })
-  name?: string;
-
-  @Field({ nullable: true })
-  fatherLastName?: string;
-
-  @Field({ nullable: true })
-  motherLastName?: string;
-
-  @Field({ nullable: true })
-  career?: string;
-
-  @Field({ nullable: true })
-  description?: string;
-
-  @Field({ nullable: true })
-  dateOfBirth?: string;
-
-  @Field({ nullable: true })
-  studentCode?: string;
-
-  @Field({ nullable: true })
-  studentNip?: string;
-
-  @Field({ nullable: true })
-  credentials?: string;
-
-  @Field({ nullable: true })
-  campus?: string;
-}
 @InputType()
-export class UserRegisterInput implements Partial<User> {
+export class UserRegisterInput {
   @Field()
-  name: string;
+  studentCode: string;
 
   @Field()
-  fatherLastName: string;
+  studentNip: string;
 
   @Field()
-  motherLastName: string;
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field()
+  birthday: string;
 
   @Field()
   career: string;
@@ -67,13 +34,52 @@ export class UserRegisterInput implements Partial<User> {
   description: string;
 
   @Field()
-  dateOfBirth: string;
+  gender: string;
 
   @Field()
+  primaryImageUrl: string;
+
+  @Field(() => [String])
+  secondaryImagesUrl: string[];
+}
+
+@ObjectType()
+export class UserRegisterInvalidInputError {
+  constructor(errors: Partial<UserRegisterInvalidInputError>) {
+    Object.assign(this, errors);
+  }
+  @Field({ nullable: true })
   studentCode: string;
 
-  @Field()
+  @Field({ nullable: true })
   studentNip: string;
+
+  @Field({ nullable: true })
+  firstName: string;
+
+  @Field({ nullable: true })
+  lastName: string;
+
+  @Field({ nullable: true })
+  birthday: string;
+
+  @Field({ nullable: true })
+  career: string;
+
+  @Field({ nullable: true })
+  description: string;
+
+  @Field({ nullable: true })
+  gender: string;
+
+  @Field({ nullable: true })
+  campus: string;
+
+  @Field({ nullable: true })
+  credentials: string;
+
+  @Field({ nullable: true })
+  primaryImageUrl: string;
 }
 
 export const UserRegisterResult = createUnionType({

@@ -1,5 +1,5 @@
 import { ObjectType, Field } from "type-graphql";
-import { Entity as TOEntity, Column } from "typeorm";
+import { Entity as TOEntity, Column, Index } from "typeorm";
 import Entity from "./Entity";
 
 @TOEntity("users")
@@ -10,17 +10,18 @@ export default class User extends Entity {
     Object.assign(this, user);
   }
 
-  @Field(() => String)
+  @Field()
   @Column()
-  name: string;
+  @Index()
+  studentCode: string;
 
   @Field(() => String)
   @Column()
-  fatherLastName: string;
+  firstName: string;
 
   @Field(() => String)
   @Column()
-  motherLastName: string;
+  lastName: string;
 
   @Field(() => String)
   @Column()
@@ -35,10 +36,14 @@ export default class User extends Entity {
   birthday: Date;
 
   @Field(() => String)
+  @Column()
+  gender: string;
+
+  @Field(() => String)
   @Column({ nullable: true })
-  primaryImageUrn: string;
+  primaryImageUrl: string;
 
   @Field(() => [String])
   @Column("text", { array: true, nullable: true })
-  secondaryImagesUrn: string[];
+  secondaryImagesUrl: string[];
 }
