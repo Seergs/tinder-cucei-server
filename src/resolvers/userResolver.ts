@@ -1,6 +1,7 @@
 import { Resolver, Mutation, Query, Arg } from "type-graphql";
 import FormData from "form-data";
 import fetch from "node-fetch";
+import { sign } from "jsonwebtoken";
 import {
   UserRegisterInput,
   UserRegisterResult,
@@ -11,8 +12,10 @@ import {
   UserLoginResult,
   UserLoginInput,
   UserLoginInvalidInputError,
+  UserLoginResultSuccess,
 } from "../types/graphql/loginTypes";
-import { validateInputData } from "../validators/register";
+import { validateSignupInputData } from "../validators/register";
+import { validateLoginInputData } from "../validators/login";
 import User from "../entities/User";
 import { parseCookies, parseDate } from "../util/utils";
 
@@ -28,12 +31,16 @@ export default class UserResolver {
     @Arg("registerInputData") inputData: UserRegisterInput
   ): Promise<typeof UserRegisterResult> {
     // User input validation
-    const errors = validateInputData(inputData);
+    const errors = validateSignupInputData(inputData);
+    if (Object.keys(errors).length)
+      return new UserRegisterInvalidInputError(errors);
 
     // Validate user registered already
     if (await User.count({ studentCode: inputData.studentCode })) {
-      errors.studentCode =
-        "Ya existe una cuenta asociada a este código, intenta iniciar sesión";
+      return new UserRegisterInvalidInputError({
+        studentCode:
+          "Ya existe una cuenta asociada a este código, intenta iniciar sesión",
+      });
     }
 
     // Credentials validation
@@ -62,8 +69,37 @@ export default class UserResolver {
   async login(
     @Arg("loginInputData") inputData: UserLoginInput
   ): Promise<typeof UserLoginResult> {
-    console.log(inputData);
-    return new UserLoginInvalidInputError({});
+    // inpout validation
+    const errors = validateLoginInputData(inputData);
+    if (Object.keys(errors).length)
+      return new UserLoginInvalidInputError(errors);
+
+    // user exists validation
+    const user = await User.findOne({ studentCode: inputData.studentCode });
+    if (!user) {
+      return new UserLoginInvalidInputError({
+        studentCode: "No se encontró una cuenta asociada a este código",
+      });
+    }
+
+    // credentials validation
+    const { credentials: credentialsError } = await loginToSiiau(
+      inputData.studentCode,
+      inputData.studentNip
+    );
+
+    if (credentialsError)
+      return new UserLoginInvalidInputError({ credentials: credentialsError });
+
+    const payload = {
+      id: user.id,
+      studentCode: user.studentCode,
+      name: user.firstName,
+    };
+
+    const jwt = sign(payload, process.env.JWT_SECRET!);
+
+    return new UserLoginResultSuccess({ jwt });
   }
 }
 

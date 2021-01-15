@@ -1,24 +1,20 @@
 import { ObjectType, Field, InputType, createUnionType } from "type-graphql";
-import User from "../../entities/User";
 
 @ObjectType()
 export class UserLoginResultSuccess {
-  constructor(user: User) {
-    this.user = user;
+  constructor(data: Partial<UserLoginResultSuccess>) {
+    Object.assign(this, data);
   }
+
   @Field()
-  user: User;
+  jwt: string;
 }
 
 @ObjectType()
 export class UserLoginInvalidInputError {
   constructor(userLoginInputErrors: Partial<UserLoginInvalidInputError>) {
     Object.assign(this, userLoginInputErrors);
-    this.message = "Invalid Input Error";
   }
-  @Field()
-  message: string;
-
   @Field({ nullable: true })
   studentCode?: string;
 
@@ -28,6 +24,7 @@ export class UserLoginInvalidInputError {
   @Field({ nullable: true })
   credentials?: string;
 }
+
 @InputType()
 export class UserLoginInput {
   @Field()

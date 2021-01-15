@@ -39,7 +39,6 @@ input UserLoginInput {
 
 type UserLoginInvalidInputError {
   credentials: String
-  message: String!
   studentCode: String
   studentNip: String
 }
@@ -47,7 +46,7 @@ type UserLoginInvalidInputError {
 union UserLoginResult = UserLoginInvalidInputError | UserLoginResultSuccess
 
 type UserLoginResultSuccess {
-  user: User!
+  jwt: String!
 }
 
 input UserRegisterInput {

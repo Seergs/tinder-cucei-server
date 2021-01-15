@@ -1,7 +1,7 @@
 import { isEmpty } from "../util/utils";
 import careers from "../util/careers";
 
-export function validateInputData(inputData: any) {
+export function validateSignupInputData(inputData: any) {
   let errors: any = {};
 
   if (isEmpty(inputData.description)) {
@@ -43,9 +43,6 @@ export function validateInputData(inputData: any) {
     )
   ) {
     errors.primaryImageUrl = "Url inválido";
-  }
-  if (isEmpty(inputData.studentNip)) {
-    errors.studentNip = "No puede estar vacío";
   }
 
   return errors;
