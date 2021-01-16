@@ -1,4 +1,4 @@
-import { Resolver, Mutation, Query, Arg } from "type-graphql";
+import { Resolver, Mutation, Query, Arg, Ctx } from "type-graphql";
 import FormData from "form-data";
 import fetch from "node-fetch";
 import { sign } from "jsonwebtoken";
@@ -14,6 +14,13 @@ import {
   UserLoginInvalidInputError,
   UserLoginResultSuccess,
 } from "../types/graphql/loginTypes";
+
+import {
+  MeResultError,
+  MeResult,
+  MeResultSuccess,
+} from "../types/graphql/meTypes";
+
 import { validateSignupInputData } from "../validators/register";
 import { validateLoginInputData } from "../validators/login";
 import User from "../entities/User";
@@ -21,9 +28,13 @@ import { parseCookies, parseDate } from "../util/utils";
 
 @Resolver()
 export default class UserResolver {
-  @Query(() => String)
-  async me() {
-    return "Me";
+  @Query(() => MeResult)
+  async me(@Ctx("user") user: Partial<User> | null) {
+    if (!user) {
+      return new MeResultError("No has iniciado sesión");
+    }
+
+    return new MeResultSuccess(user);
   }
 
   @Mutation(() => UserRegisterResult)
