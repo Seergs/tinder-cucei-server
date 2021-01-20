@@ -1,6 +1,8 @@
-import { ObjectType, Field } from "type-graphql";
+import { Expose } from "class-transformer";
+import { ObjectType, Field, Int } from "type-graphql";
 import { Entity as TOEntity, Column, Index } from "typeorm";
 import Entity from "./Entity";
+import { getAgeFromDateOfBirth } from "../util/utils";
 
 @TOEntity("users")
 @ObjectType()
@@ -46,4 +48,29 @@ export default class User extends Entity {
   @Field(() => [String])
   @Column("text", { array: true, nullable: true })
   secondaryImagesUrl: string[];
+
+  @Field(() => Preferences)
+  @Column(() => Preferences)
+  preferences: Preferences;
+
+  @Field(() => Int)
+  @Expose()
+  get age(): number {
+    return getAgeFromDateOfBirth(this.birthday);
+  }
+}
+
+@ObjectType()
+export class Preferences {
+  @Field(() => String)
+  @Column("varchar", { default: "b" })
+  preferedGender: string;
+
+  @Field(() => Int)
+  @Column("int", { default: 22 })
+  ageRange: number;
+
+  @Field(() => [String])
+  @Column("text", { array: true, nullable: true })
+  interests: string[];
 }

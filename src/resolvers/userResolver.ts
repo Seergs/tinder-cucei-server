@@ -19,10 +19,15 @@ import {
   MeResultError,
   MeResult,
   MeResultSuccess,
-} from "../types/graphql/meTypes";
+  UpdatePreferencesInput,
+  UpdatePreferencesResult,
+  UpdatePreferencesInputError,
+  UpdatePreferencesSuccess,
+} from "../types/graphql/userTypes";
 
 import { validateSignupInputData } from "../validators/register";
 import { validateLoginInputData } from "../validators/login";
+import { validatePreferences } from "../validators/user";
 import User from "../entities/User";
 import { parseCookies, parseDate } from "../util/utils";
 
@@ -111,6 +116,27 @@ export default class UserResolver {
     const jwt = sign(payload, process.env.JWT_SECRET!);
 
     return new UserLoginResultSuccess({ jwt });
+  }
+
+  @Mutation(() => UpdatePreferencesResult)
+  async updatePreferences(
+    @Arg("preferences") preferences: UpdatePreferencesInput,
+    @Ctx("user") user: Partial<User> | null
+  ): Promise<typeof UpdatePreferencesResult> {
+    if (!user) {
+      return new MeResultError("No has iniciado sesión");
+    }
+    const errors = validatePreferences(preferences);
+    if (Object.keys(errors).length) {
+      return new UpdatePreferencesInputError(errors);
+    }
+
+    const userDb = await User.findOne(user.id);
+    if (userDb) {
+      userDb.preferences = preferences;
+      await userDb.save();
+    }
+    return new UpdatePreferencesSuccess(preferences);
   }
 }
 

@@ -28,6 +28,7 @@ async function main() {
     context: async ({ req }) => {
       let user: User | null = null;
       const token = req.headers.authorization || null;
+      console.log(`Found token ${token}`);
 
       if (!token) return { user };
 

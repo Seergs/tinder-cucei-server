@@ -23,13 +23,39 @@ type MeResultSuccess {
 type Mutation {
   login(loginInputData: UserLoginInput!): UserLoginResult!
   register(registerInputData: UserRegisterInput!): UserRegisterResult!
+  updatePreferences(preferences: UpdatePreferencesInput!): UpdatePreferencesResult!
+}
+
+type Preferences {
+  ageRange: Int!
+  interests: [String!]!
+  preferedGender: String!
 }
 
 type Query {
   me: MeResult!
 }
 
+input UpdatePreferencesInput {
+  ageRange: Int!
+  interests: [String!]!
+  preferedGender: String!
+}
+
+type UpdatePreferencesInputError {
+  ageRange: String
+  interests: String
+  preferedGender: String
+}
+
+union UpdatePreferencesResult = MeResultError | UpdatePreferencesInputError | UpdatePreferencesSuccess
+
+type UpdatePreferencesSuccess {
+  preferences: Preferences!
+}
+
 type User {
+  age: Int!
   birthday: DateTime!
   career: String!
   createdAt: DateTime!
@@ -38,6 +64,7 @@ type User {
   gender: String!
   id: String!
   lastName: String!
+  preferences: Preferences!
   primaryImageUrl: String!
   secondaryImagesUrl: [String!]!
   studentCode: String!

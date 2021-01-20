@@ -13,3 +13,11 @@ export function parseCookies(cookiesUnparsed: string) {
 
   return cookies.split(", ").join("; ");
 }
+
+export function getAgeFromDateOfBirth(dob: Date) {
+  const difference = Date.now() - dob.getTime();
+
+  const age = new Date(difference);
+
+  return Math.abs(age.getUTCFullYear() - 1970);
+}
