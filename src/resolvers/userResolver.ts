@@ -38,8 +38,9 @@ export default class UserResolver {
     if (!user) {
       return new MeResultError("No has iniciado sesión");
     }
+    const userDb = await User.findOne(user.id);
 
-    return new MeResultSuccess(user);
+    return new MeResultSuccess({ ...user, preferences: userDb?.preferences });
   }
 
   @Mutation(() => UserRegisterResult)
@@ -115,7 +116,13 @@ export default class UserResolver {
 
     const jwt = sign(payload, process.env.JWT_SECRET!);
 
-    return new UserLoginResultSuccess({ jwt });
+    return new UserLoginResultSuccess({
+      jwt,
+      firstName: user.firstName,
+      id: user.id,
+      preferences: user.preferences,
+      studentCode: user.studentCode,
+    });
   }
 
   @Mutation(() => UpdatePreferencesResult)

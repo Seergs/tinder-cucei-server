@@ -1,4 +1,5 @@
 import { ObjectType, Field, InputType, createUnionType } from "type-graphql";
+import { Preferences } from "../../entities/User";
 
 @ObjectType()
 export class UserLoginResultSuccess {
@@ -8,6 +9,18 @@ export class UserLoginResultSuccess {
 
   @Field()
   jwt: string;
+
+  @Field()
+  id: string;
+
+  @Field()
+  studentCode: string;
+
+  @Field()
+  firstName: string;
+
+  @Field(() => Preferences)
+  preferences: Preferences;
 }
 
 @ObjectType()

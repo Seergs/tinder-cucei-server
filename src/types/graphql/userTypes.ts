@@ -21,6 +21,9 @@ export class MeResultSuccess {
 
   @Field()
   firstName: string;
+
+  @Field(() => Preferences)
+  preferences: Preferences;
 }
 
 @ObjectType()

@@ -17,6 +17,7 @@ type MeResultError {
 type MeResultSuccess {
   firstName: String!
   id: String!
+  preferences: Preferences!
   studentCode: String!
 }
 
@@ -85,7 +86,11 @@ type UserLoginInvalidInputError {
 union UserLoginResult = UserLoginInvalidInputError | UserLoginResultSuccess
 
 type UserLoginResultSuccess {
+  firstName: String!
+  id: String!
   jwt: String!
+  preferences: Preferences!
+  studentCode: String!
 }
 
 input UserRegisterInput {
