@@ -9,8 +9,12 @@ export function validatePreferences(preferences: any) {
     errors.preferedGender = "No es un género válido";
   }
 
-  if (preferences.ageRange < 15 || preferences.ageRange > 50) {
-    errors.ageRange = "Fuera de rango";
+  if (preferences.minAge < 15) {
+    errors.minAge = "Fuera de rango";
+  }
+
+  if (preferences.maxAge > 50) {
+    errors.maxAge = "Fuera de rango";
   }
 
   if (!preferences.interests.length) {

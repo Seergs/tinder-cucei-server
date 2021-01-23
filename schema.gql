@@ -28,24 +28,28 @@ type Mutation {
 }
 
 type Preferences {
-  ageRange: Int!
   interests: [String!]!
+  maxAge: Int!
+  minAge: Int!
   preferedGender: String!
 }
 
 type Query {
   me: MeResult!
+  people(limit: Float!): [User!]!
 }
 
 input UpdatePreferencesInput {
-  ageRange: Int!
   interests: [String!]!
+  maxAge: Int!
+  minAge: Int!
   preferedGender: String!
 }
 
 type UpdatePreferencesInputError {
-  ageRange: String
   interests: String
+  maxAge: String
+  minAge: String
   preferedGender: String
 }
 

@@ -1,8 +1,8 @@
-import { Expose } from "class-transformer";
 import { ObjectType, Field, Int } from "type-graphql";
 import { Entity as TOEntity, Column, Index } from "typeorm";
 import Entity from "./Entity";
 import { getAgeFromDateOfBirth } from "../util/utils";
+import { Expose } from "class-transformer";
 
 @TOEntity("users")
 @ObjectType()
@@ -67,8 +67,12 @@ export class Preferences {
   preferedGender: string;
 
   @Field(() => Int)
-  @Column("int", { default: 22 })
-  ageRange: number;
+  @Column("int", { default: 18 })
+  minAge: number;
+
+  @Field(() => Int)
+  @Column("int", { default: 30 })
+  maxAge: number;
 
   @Field(() => [String])
   @Column("text", { array: true, nullable: true })

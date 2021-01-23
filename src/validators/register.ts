@@ -31,8 +31,8 @@ export function validateSignupInputData(inputData: any) {
     errors.birthday = "Fecha inválida (YYYY-MM-DD)";
   }
 
-  if (!["m", "f"].includes(inputData.gender)) {
-    errors.gender = "Género inválido, debe ser 'm' o 'f'";
+  if (!["m", "f", "b"].includes(inputData.gender)) {
+    errors.gender = "Género inválido, debe ser 'm', 'f' o 'b'";
   }
 
   if (isEmpty(inputData.primaryImageUrl)) {

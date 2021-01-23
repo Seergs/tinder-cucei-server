@@ -47,7 +47,10 @@ export class UpdatePreferencesInput {
   preferedGender: string;
 
   @Field(() => Int)
-  ageRange: number;
+  minAge: number;
+
+  @Field(() => Int)
+  maxAge: number;
 
   @Field(() => [String])
   interests: string[];
@@ -62,7 +65,10 @@ export class UpdatePreferencesInputError {
   preferedGender: string;
 
   @Field({ nullable: true })
-  ageRange: string;
+  minAge: string;
+
+  @Field({ nullable: true })
+  maxAge: string;
 
   @Field({ nullable: true })
   interests: string;

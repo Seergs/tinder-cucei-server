@@ -10,6 +10,7 @@ import express from "express";
 import { verify } from "jsonwebtoken";
 
 import UserResolver from "./resolvers/userResolver";
+import PeopleResolver from "./resolvers/peopleResolver";
 import User from "./entities/User";
 
 const PORT = process.env.PORT || 5000;
@@ -18,7 +19,7 @@ async function main() {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, PeopleResolver],
     emitSchemaFile: true,
     validate: false,
   });

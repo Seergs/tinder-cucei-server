@@ -61,6 +61,7 @@ export default class UserResolver {
     }
 
     // Credentials validation
+    /*
     const {
       campus: campusError,
       credentials: credentialsError,
@@ -71,7 +72,7 @@ export default class UserResolver {
 
     if (Object.keys(errors).length) {
       return new UserRegisterInvalidInputError(errors);
-    }
+    }*/
 
     const newUser = new User({
       ...inputData,
@@ -99,6 +100,7 @@ export default class UserResolver {
       });
     }
 
+    /*
     // credentials validation
     const { credentials: credentialsError } = await loginToSiiau(
       inputData.studentCode,
@@ -107,6 +109,7 @@ export default class UserResolver {
 
     if (credentialsError)
       return new UserLoginInvalidInputError({ credentials: credentialsError });
+      */
 
     const payload = {
       id: user.id,
