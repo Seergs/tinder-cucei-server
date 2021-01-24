@@ -8,9 +8,10 @@ import {
   Person,
 } from "../types/graphql/peopleTypes";
 import { MeResultError } from "../types/graphql/userTypes";
+import { getAgeFromDateOfBirth } from "../util/utils";
 
 @Resolver()
-export default class PeopleResolver {
+class PeopleResolver {
   @Query(() => PeopleResult)
   async people(
     @Arg("limit") limit: number,
@@ -25,27 +26,51 @@ export default class PeopleResolver {
     const dbUser = await User.findOne(user.id);
     const userPreferences = dbUser?.preferences;
 
-    const select = `select id, career, birthday, "firstName", "lastName", "primaryImageUrl", "secondaryImagesUrl" from users`;
-    const gender = ` where gender='${userPreferences?.preferedGender}'`;
-    const inAgeRange = ` and ${userPreferences?.minAge} <= date_part('year', age(birthday)) 
-                          and ${userPreferences?.maxAge} >= date_part('year', age(birthday))`;
-    const notMe = ` and id <> '${user.id}'`;
-    const order = ` order by random() limit ${limit}`;
+    // This queries for random users that the current user has not seen yet
+    // They must be in the age range
 
-    const query = `${select}${gender}${inAgeRange}${notMe}${order}`;
+    const query = `SELECT
+                      u.id, career, birthday, "firstName", "lastName", "primaryImageUrl", "secondaryImagesUrl"
+                   FROM 
+                      users u
+                   LEFT JOIN
+                      views v
+                      ON v."viewerId" = '${user.id}'
+                      AND v."targetId" = u.id
+                    WHERE v is NULL
+                    AND gender='${userPreferences?.preferedGender}'
+                    AND ${userPreferences?.minAge} <= date_part('year', age(birthday))
+                    AND ${userPreferences?.maxAge} >= date_part('year', age(birthday))
+                    AND u.id <> '${user.id}'
+                    ORDER BY RANDOM() limit ${limit}
+                   `;
 
-    const people: Person[] = await manager.query(query);
+    const users: User[] = await manager.query(query);
 
-    people.map(async (p) => {
-      const view = await View.insert({
-        viewer: dbUser,
-        target: p,
-      });
-      p.viewId = view.raw[0].id;
-    });
+    const profiles: Person[] = await Promise.all(
+      users.map(async (u) => {
+        const view = await View.insert({
+          viewer: dbUser,
+          target: u,
+        });
+
+        return {
+          lastName: u.lastName,
+          id: u.id,
+          firstName: u.firstName,
+          birthday: u.birthday,
+          career: u.career,
+          age: getAgeFromDateOfBirth(u.birthday),
+          primaryImageUrl: u.primaryImageUrl,
+          secondaryImagesUrl: u.secondaryImagesUrl,
+          viewId: view.raw[0].id,
+        };
+      })
+    );
 
     return new PeopleSuccess({
-      people,
+      people: profiles,
     });
   }
 }
+export default PeopleResolver;

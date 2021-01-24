@@ -50,8 +50,5 @@ export class Person implements Partial<User> {
   viewId: string;
 
   @Field(() => Int)
-  @Expose()
-  get age(): number {
-    return getAgeFromDateOfBirth(this.birthday);
-  }
+  age: number;
 }
