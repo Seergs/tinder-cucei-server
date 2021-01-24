@@ -27,6 +27,24 @@ type Mutation {
   updatePreferences(preferences: UpdatePreferencesInput!): UpdatePreferencesResult!
 }
 
+union PeopleResult = MeResultError | PeopleSuccess
+
+type PeopleSuccess {
+  people: [Person!]!
+}
+
+type Person {
+  age: Int!
+  birthday: DateTime!
+  career: String!
+  firstName: String!
+  id: String!
+  lastName: String!
+  primaryImageUrl: String!
+  secondaryImagesUrl: [String!]!
+  viewId: String!
+}
+
 type Preferences {
   interests: [String!]!
   maxAge: Int!
@@ -36,7 +54,7 @@ type Preferences {
 
 type Query {
   me: MeResult!
-  people(limit: Float!): [User!]!
+  people(limit: Float!): PeopleResult!
 }
 
 input UpdatePreferencesInput {

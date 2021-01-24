@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from "type-graphql";
-import { Entity as TOEntity, Column, Index } from "typeorm";
+import { Entity as TOEntity, Column, Index, OneToMany } from "typeorm";
 import Entity from "./Entity";
+import View from "./View";
 import { getAgeFromDateOfBirth } from "../util/utils";
 import { Expose } from "class-transformer";
 
@@ -52,6 +53,12 @@ export default class User extends Entity {
   @Field(() => Preferences)
   @Column(() => Preferences)
   preferences: Preferences;
+
+  @OneToMany(() => View, (v) => v.viewer)
+  views: View[];
+
+  @OneToMany(() => View, (v) => v.target)
+  targets: View[];
 
   @Field(() => Int)
   @Expose()
