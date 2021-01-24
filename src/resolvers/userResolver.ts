@@ -32,7 +32,7 @@ import User from "../entities/User";
 import { parseCookies, parseDate } from "../util/utils";
 
 @Resolver()
-class UserResolver {
+export default class UserResolver {
   @Query(() => MeResult)
   async me(@Ctx("user") user: Partial<User> | null) {
     if (!user) {
@@ -149,8 +149,6 @@ class UserResolver {
     return new UpdatePreferencesSuccess(preferences);
   }
 }
-
-export default UserRegisterResultSuccess;
 
 type loginToSiiauErrors = {
   credentials: string | null;
