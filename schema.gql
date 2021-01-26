@@ -54,7 +54,7 @@ type Preferences {
 
 type Query {
   me: MeResult!
-  people(limit: Float!): PeopleResult!
+  people(limit: Int!): PeopleResult!
 }
 
 input UpdatePreferencesInput {

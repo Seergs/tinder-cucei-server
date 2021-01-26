@@ -82,6 +82,6 @@ export class Preferences {
   maxAge: number;
 
   @Field(() => [String])
-  @Column("text", { array: true, nullable: true })
+  @Column("text", { array: true, nullable: true, default: {} })
   interests: string[];
 }

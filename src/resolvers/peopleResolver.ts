@@ -1,4 +1,4 @@
-import { Arg, Ctx, Query, Resolver } from "type-graphql";
+import { Arg, Ctx, Query, Resolver, Int } from "type-graphql";
 import { getManager } from "typeorm";
 import User from "../entities/User";
 import View from "../entities/View";
@@ -14,7 +14,7 @@ import { getAgeFromDateOfBirth } from "../util/utils";
 class PeopleResolver {
   @Query(() => PeopleResult)
   async people(
-    @Arg("limit") limit: number,
+    @Arg("limit", () => Int) limit: number,
     @Ctx("user") user: Partial<User>
   ): Promise<typeof PeopleResult> {
     if (!user) {
