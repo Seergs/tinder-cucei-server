@@ -23,7 +23,7 @@ export function validateSignupInputData(inputData: any) {
     errors.studentNip = "No puede estar vacío";
   }
 
-  if (!Object.keys(careers).includes(inputData.career)) {
+  if (!careers.includes(inputData.career)) {
     errors.career = "Carrera no encontrada";
   }
 

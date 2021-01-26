@@ -1,3 +1,20 @@
-export default {
-  INCO: "Ingeniería en computación",
-};
+export default [
+  "Licenciatura en Física",
+  "Licenciatura en Matemáticas",
+  "Licenciatura en Química",
+  "Químico Farmacéutico Biólogo",
+  "Licenciatura en Ciencia de Materiales",
+  "Ingeniería Civil",
+  "Ingeniería en Alimentos y Biotecnología",
+  "Ingeniería Topográfica",
+  "Ingeniería Industrial",
+  "Ingeniería Mecánica Eléctrica",
+  "Ingeniería Química",
+  "Ingeniería en Logística y Transporte",
+  "Ingeniería Informática",
+  "Ingeniería Biomédica",
+  "Ingeniería en Computación",
+  "Ingeniería en Comunicaciones y Electrónica",
+  "Ingeniería Fotónica",
+  "Ingeniería Robótica",
+];

@@ -16,7 +16,8 @@ import User from "./entities/User";
 const PORT = process.env.PORT || 5000;
 
 async function main() {
-  await createConnection();
+  const connection = await createConnection();
+  await connection.runMigrations();
 
   const schema = await buildSchema({
     resolvers: [UserResolver, PeopleResolver],
