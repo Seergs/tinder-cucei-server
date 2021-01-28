@@ -30,7 +30,7 @@ class PeopleResolver {
     // They must be in the age range
 
     const query = `SELECT
-                      u.id, career, birthday, "firstName", "lastName", "primaryImageUrl", "secondaryImagesUrl"
+                      u.id, career, birthday, "firstName", "lastName", "primaryImageUrl", "secondaryImagesUrl", "preferencesInterests" as interests
                    FROM 
                       users u
                    LEFT JOIN
@@ -45,9 +45,9 @@ class PeopleResolver {
                     ORDER BY RANDOM() limit ${limit}
                    `;
 
-    const users: User[] = await manager.query(query);
+    const users: Person[] = await manager.query(query);
 
-    const profiles: Person[] = await Promise.all(
+    const profiles = await Promise.all(
       users.map(async (u) => {
         const view = await View.insert({
           viewer: dbUser,
@@ -55,14 +55,15 @@ class PeopleResolver {
         });
 
         return {
-          lastName: u.lastName,
           id: u.id,
           firstName: u.firstName,
+          lastName: u.lastName,
           birthday: u.birthday,
           career: u.career,
           age: getAgeFromDateOfBirth(u.birthday),
           primaryImageUrl: u.primaryImageUrl,
           secondaryImagesUrl: u.secondaryImagesUrl,
+          interests: u.interests,
           viewId: view.raw[0].id,
         };
       })

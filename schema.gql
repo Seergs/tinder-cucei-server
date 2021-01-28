@@ -39,6 +39,7 @@ type Person {
   career: String!
   firstName: String!
   id: String!
+  interests: [String!]!
   lastName: String!
   primaryImageUrl: String!
   secondaryImagesUrl: [String!]!

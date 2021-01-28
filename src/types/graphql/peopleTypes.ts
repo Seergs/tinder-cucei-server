@@ -1,8 +1,5 @@
-import { Expose } from "class-transformer";
 import { ObjectType, createUnionType, Field, Int } from "type-graphql";
 import User from "../../entities/User";
-import View from "../../entities/View";
-import { getAgeFromDateOfBirth } from "../../util/utils";
 import { MeResultError } from "./userTypes";
 
 @ObjectType()
@@ -51,4 +48,7 @@ export class Person implements Partial<User> {
 
   @Field(() => Int)
   age: number;
+
+  @Field(() => [String])
+  interests: string[];
 }
