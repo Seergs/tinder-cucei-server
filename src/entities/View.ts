@@ -26,6 +26,6 @@ export default class View extends Entity {
   target: User;
 
   @Field(() => Boolean)
-  @Column("boolean", { default: false })
+  @Column("boolean", { default: true })
   liked: boolean;
 }

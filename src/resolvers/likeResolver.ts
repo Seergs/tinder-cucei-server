@@ -4,7 +4,7 @@ import View from "../entities/View";
 import {
   LikeResult,
   LikeSuccess,
-  ViewNotFoundError,
+  UserNotFoundError,
 } from "../types/graphql/likesTypes";
 import { MeResultError } from "../types/graphql/userTypes";
 
@@ -12,45 +12,61 @@ import { MeResultError } from "../types/graphql/userTypes";
 export default class LikeResolver {
   @Mutation(() => LikeResult)
   async likePerson(
-    @Arg("viewId") viewId: string,
-    @Ctx("user") user: Partial<User>
+    @Arg("targetUserId") targetUserId: string,
+    @Ctx("user") user: User
   ): Promise<typeof LikeResult> {
-    if (!user) {
-      return new MeResultError("No autenticado");
-    }
+    if (!user) return new MeResultError("No autentificado");
 
-    // Current users view
-    const view = await View.findOne({
-      where: { id: viewId },
-    });
+    const targetUser = await User.findOne(targetUserId);
+    if (!targetUser) return new UserNotFoundError(targetUserId);
 
-    if (!view) return new ViewNotFoundError(viewId);
-
-    // Like
-    view.liked = true;
-    await View.update({ id: viewId }, { liked: true });
-
-    // Checking if a the target user liked the current user
-    const targetView = await View.findOne({
+    const targetUserView = await View.findOne({
       where: {
         target: {
           id: user.id,
         },
         viewer: {
-          id: view.target.id,
+          id: targetUserId,
         },
       },
     });
 
-    // Not like back
-    if (!targetView || !targetView.liked) {
-      return new LikeSuccess({ view, match: false });
+    const view = new View({
+      target: targetUser,
+      viewer: user,
+    });
+    await view.save();
+
+    let hasTargetUserLikedMeBack = false;
+    if (targetUserView && targetUserView.liked) {
+      hasTargetUserLikedMeBack = true;
     }
 
-    // Its a match
+    return new LikeSuccess({
+      view: view,
+      match: hasTargetUserLikedMeBack,
+    });
+  }
+
+  @Mutation(() => LikeResult)
+  async dislikePerson(
+    @Arg("targetUserId") targetUserId: string,
+    @Ctx("user") user: User
+  ): Promise<typeof LikeResult> {
+    const targetUser = await User.findOne(targetUserId);
+    if (!targetUser) return new UserNotFoundError(targetUserId);
+
+    const view = new View({
+      target: targetUser,
+      viewer: user,
+      liked: false,
+    });
+
+    await view.save();
+
     return new LikeSuccess({
       view,
-      match: true,
+      match: false,
     });
   }
 }

@@ -15,9 +15,9 @@ export class LikeSuccess {
 }
 
 @ObjectType()
-export class ViewNotFoundError {
-  constructor(viewId: string) {
-    this.message = `No se encontró View ${viewId}`;
+export class UserNotFoundError {
+  constructor(userId: string) {
+    this.message = `No se encontró el usuario ${userId}`;
   }
   @Field()
   message: string;
@@ -25,5 +25,5 @@ export class ViewNotFoundError {
 
 export const LikeResult = createUnionType({
   name: "LikeResult",
-  types: () => [LikeSuccess, MeResultError, ViewNotFoundError],
+  types: () => [LikeSuccess, MeResultError, UserNotFoundError],
 });

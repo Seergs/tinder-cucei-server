@@ -1,5 +1,6 @@
 import { ObjectType, createUnionType, Field, Int } from "type-graphql";
 import User from "../../entities/User";
+import { getAgeFromDateOfBirth } from "../../util/utils";
 import { MeResultError } from "./userTypes";
 
 @ObjectType()
@@ -43,11 +44,10 @@ export class Person implements Partial<User> {
   @Field(() => [String])
   secondaryImagesUrl: string[];
 
-  @Field()
-  viewId: string;
-
   @Field(() => Int)
-  age: number;
+  get age() {
+    return getAgeFromDateOfBirth(this.birthday);
+  }
 
   @Field(() => [String])
   interests: string[];

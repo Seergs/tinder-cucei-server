@@ -8,7 +8,6 @@ import {
   Person,
 } from "../types/graphql/peopleTypes";
 import { MeResultError } from "../types/graphql/userTypes";
-import { getAgeFromDateOfBirth } from "../util/utils";
 
 @Resolver()
 class PeopleResolver {
@@ -47,31 +46,7 @@ class PeopleResolver {
 
     const users: Person[] = await manager.query(query);
 
-    const profiles = await Promise.all(
-      users.map(async (u, i) => {
-        const view = await View.insert({
-          viewer: dbUser,
-          target: u,
-        });
-
-        return {
-          id: u.id,
-          firstName: u.firstName,
-          lastName: u.lastName,
-          birthday: u.birthday,
-          career: u.career,
-          age: getAgeFromDateOfBirth(u.birthday),
-          primaryImageUrl: u.primaryImageUrl,
-          secondaryImagesUrl: u.secondaryImagesUrl,
-          interests: u.interests,
-          viewId: view.raw[0].id,
-        };
-      })
-    );
-
-    return new PeopleSuccess({
-      people: profiles,
-    });
+    return new PeopleSuccess({ people: users });
   }
 }
 export default PeopleResolver;
