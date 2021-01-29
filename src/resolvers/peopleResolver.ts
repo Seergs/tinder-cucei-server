@@ -48,11 +48,13 @@ class PeopleResolver {
     const users: Person[] = await manager.query(query);
 
     const profiles = await Promise.all(
-      users.map(async (u) => {
+      users.map(async (u, i) => {
+        /*
         const view = await View.insert({
           viewer: dbUser,
           target: u,
         });
+	*/
 
         return {
           id: u.id,
@@ -64,7 +66,7 @@ class PeopleResolver {
           primaryImageUrl: u.primaryImageUrl,
           secondaryImagesUrl: u.secondaryImagesUrl,
           interests: u.interests,
-          viewId: view.raw[0].id,
+          viewId: i.toString(),
         };
       })
     );
