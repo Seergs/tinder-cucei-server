@@ -11,6 +11,7 @@ import { verify } from "jsonwebtoken";
 
 import UserResolver from "./resolvers/userResolver";
 import PeopleResolver from "./resolvers/peopleResolver";
+import LikeResolver from "./resolvers/likeResolver";
 import User from "./entities/User";
 
 const PORT = process.env.PORT || 5000;
@@ -20,7 +21,7 @@ async function main() {
   await connection.runMigrations();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, PeopleResolver],
+    resolvers: [UserResolver, PeopleResolver, LikeResolver],
     emitSchemaFile: true,
     validate: false,
   });

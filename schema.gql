@@ -8,6 +8,13 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+union LikeResult = LikeSuccess | MeResultError | ViewNotFoundError
+
+type LikeSuccess {
+  match: Boolean!
+  view: View!
+}
+
 union MeResult = MeResultError | MeResultSuccess
 
 type MeResultError {
@@ -22,6 +29,7 @@ type MeResultSuccess {
 }
 
 type Mutation {
+  likePerson(viewId: String!): LikeResult!
   login(loginInputData: UserLoginInput!): UserLoginResult!
   register(registerInputData: UserRegisterInput!): UserRegisterResult!
   updatePreferences(preferences: UpdatePreferencesInput!): UpdatePreferencesResult!
@@ -147,4 +155,15 @@ union UserRegisterResult = UserRegisterInvalidInputError | UserRegisterResultSuc
 
 type UserRegisterResultSuccess {
   user: User!
+}
+
+type View {
+  createdAt: DateTime!
+  id: String!
+  liked: Boolean!
+  updatedAt: DateTime!
+}
+
+type ViewNotFoundError {
+  message: String!
 }

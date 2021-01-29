@@ -57,9 +57,6 @@ export default class User extends Entity {
   @OneToMany(() => View, (v) => v.viewer)
   views: View[];
 
-  @OneToMany(() => View, (v) => v.target)
-  targets: View[];
-
   @Field(() => Int)
   @Expose()
   get age(): number {

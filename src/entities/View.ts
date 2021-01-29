@@ -12,16 +12,16 @@ export default class View extends Entity {
   }
 
   @ManyToOne(() => User, (u) => u.views, {
-    primary: true,
     onDelete: "CASCADE",
     cascade: true,
+    eager: true,
   })
   viewer: User;
 
-  @ManyToOne(() => User, (u) => u.targets, {
-    primary: true,
+  @ManyToOne(() => User, {
     cascade: true,
     onDelete: "CASCADE",
+    eager: true,
   })
   target: User;
 

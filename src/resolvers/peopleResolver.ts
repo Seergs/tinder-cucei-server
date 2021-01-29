@@ -49,12 +49,10 @@ class PeopleResolver {
 
     const profiles = await Promise.all(
       users.map(async (u, i) => {
-        /*
         const view = await View.insert({
           viewer: dbUser,
           target: u,
         });
-	*/
 
         return {
           id: u.id,
@@ -66,7 +64,7 @@ class PeopleResolver {
           primaryImageUrl: u.primaryImageUrl,
           secondaryImagesUrl: u.secondaryImagesUrl,
           interests: u.interests,
-          viewId: i.toString(),
+          viewId: view.raw[0].id,
         };
       })
     );
