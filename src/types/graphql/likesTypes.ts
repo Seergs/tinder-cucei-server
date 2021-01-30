@@ -1,4 +1,5 @@
 import { Field, createUnionType, ObjectType } from "type-graphql";
+import Match from "../../entities/Match";
 import View from "../../entities/View";
 import { MeResultError } from "./userTypes";
 
@@ -10,8 +11,8 @@ export class LikeSuccess {
   @Field()
   view: View;
 
-  @Field()
-  match: boolean;
+  @Field({ nullable: true })
+  match: Match;
 }
 
 @ObjectType()

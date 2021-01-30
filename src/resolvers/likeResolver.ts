@@ -1,4 +1,5 @@
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
+import Match from "../entities/Match";
 import User from "../entities/User";
 import View from "../entities/View";
 import {
@@ -37,14 +38,18 @@ export default class LikeResolver {
     });
     await view.save();
 
-    let hasTargetUserLikedMeBack = false;
+    let match: undefined | Match = undefined;
     if (targetUserView && targetUserView.liked) {
-      hasTargetUserLikedMeBack = true;
+      const newMatch = new Match({
+        userOne: user,
+        userTwo: targetUser,
+      });
+      match = await newMatch.save();
     }
 
     return new LikeSuccess({
       view: view,
-      match: hasTargetUserLikedMeBack,
+      match: match,
     });
   }
 
@@ -66,7 +71,7 @@ export default class LikeResolver {
 
     return new LikeSuccess({
       view,
-      match: false,
+      match: undefined,
     });
   }
 }

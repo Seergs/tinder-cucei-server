@@ -11,8 +11,14 @@ scalar DateTime
 union LikeResult = LikeSuccess | MeResultError | UserNotFoundError
 
 type LikeSuccess {
-  match: Boolean!
+  match: Match
   view: View!
+}
+
+type Match {
+  createdAt: DateTime!
+  id: String!
+  updatedAt: DateTime!
 }
 
 union MeResult = MeResultError | MeResultSuccess
@@ -62,6 +68,7 @@ type Preferences {
 }
 
 type Query {
+  matches: [Match!]
   me: MeResult!
   people(limit: Int!): PeopleResult!
 }

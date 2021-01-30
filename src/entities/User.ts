@@ -4,6 +4,7 @@ import Entity from "./Entity";
 import View from "./View";
 import { getAgeFromDateOfBirth } from "../util/utils";
 import { Expose } from "class-transformer";
+import Match from "./Match";
 
 @TOEntity("users")
 @ObjectType()
@@ -56,6 +57,9 @@ export default class User extends Entity {
 
   @OneToMany(() => View, (v) => v.viewer)
   views: View[];
+
+  @OneToMany(() => Match, (m) => m.userOne || m.userTwo)
+  matches: Match[];
 
   @Field(() => Int)
   @Expose()
