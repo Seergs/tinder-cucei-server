@@ -84,7 +84,8 @@ const imageUrls = {
   ],
 };
 
-const data: any = [];
+const users: any = [];
+const views: any = [];
 
 for (let i = 0; i < 100; ++i) {
   const genderIndex = getRandomInt(0, 2);
@@ -125,7 +126,7 @@ for (let i = 0; i < 100; ++i) {
   };
   const studentCode = `${i}`.padStart(9, "0");
 
-  data.push({
+  users.push({
     firstName,
     lastName,
     career,
@@ -138,4 +139,4 @@ for (let i = 0; i < 100; ++i) {
   });
 }
 
-export default data;
+export { users, views };
