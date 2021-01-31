@@ -12,7 +12,7 @@ export class SeedUser1611541507375 implements MigrationInterface {
 
     const views: any = [];
     savedUsers.map((user, i) => {
-      if (i % 5 === 0 && user.id !== targetId) {
+      if (i % 2 === 0 && user.id !== targetId) {
         views.push({
           viewer: user,
           target,

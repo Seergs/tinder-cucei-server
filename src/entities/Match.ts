@@ -11,6 +11,7 @@ export default class Match extends Entity {
     Object.assign(this, match);
   }
 
+  @Field(() => User)
   @ManyToOne(() => User, (u) => u.matches, {
     onDelete: "CASCADE",
     cascade: true,
@@ -18,6 +19,7 @@ export default class Match extends Entity {
   })
   userOne: User;
 
+  @Field(() => User)
   @ManyToOne(() => User, (u) => u.matches, {
     cascade: true,
     onDelete: "CASCADE",

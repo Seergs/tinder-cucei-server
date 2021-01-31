@@ -87,7 +87,7 @@ const imageUrls = {
 const users: any = [];
 const views: any = [];
 
-for (let i = 0; i < 100; ++i) {
+for (let i = 0; i < 300; ++i) {
   const genderIndex = getRandomInt(0, 2);
   const gender = genders[genderIndex];
   const lastName = faker.name.lastName();

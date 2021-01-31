@@ -19,6 +19,8 @@ type Match {
   createdAt: DateTime!
   id: String!
   updatedAt: DateTime!
+  userOne: User!
+  userTwo: User!
 }
 
 union MeResult = MeResultError | MeResultSuccess

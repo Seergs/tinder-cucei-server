@@ -7,6 +7,9 @@ export default class MatchResolver {
   @Query(() => [Match], { nullable: true })
   async matches(@Ctx("user") user: User) {
     const matches = await Match.find({
+      order: {
+        createdAt: "DESC",
+      },
       where: [
         {
           userOne: user,
