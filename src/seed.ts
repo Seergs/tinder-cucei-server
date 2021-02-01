@@ -94,22 +94,51 @@ for (let i = 0; i < 300; ++i) {
   const career = careers[getRandomInt(0, careers.length - 1)];
   const description = faker.lorem.paragraph();
   const birthday = faker.date.between("1990-01-01", "2001-12-31");
+  const numberOfSecondaryImages = getRandomInt(0, 2);
   let firstName: string = "";
   let primaryImageUrl;
+  let secondaryImagesUrl: string[] = [];
   switch (gender) {
-    case "m":
-      primaryImageUrl = imageUrls.m[getRandomInt(0, imageUrls.m.length - 1)];
+    case "m": {
       firstName = faker.name.firstName(0);
+      const primaryImageIndex = getRandomInt(0, imageUrls.m.length - 1);
+      primaryImageUrl = imageUrls.m[primaryImageIndex];
+      for (let j = 0; j < numberOfSecondaryImages; ++j) {
+        let secondaryImagesIndex = getRandomInt(0, imageUrls.m.length - 1);
+        while (secondaryImagesIndex === primaryImageIndex) {
+          secondaryImagesIndex = getRandomInt(0, imageUrls.m.length - 1);
+        }
+        secondaryImagesUrl.push(imageUrls.m[secondaryImagesIndex]!);
+      }
       break;
-    case "f":
-      primaryImageUrl = imageUrls.f[getRandomInt(0, imageUrls.f.length - 1)];
+    }
+    case "f": {
       firstName = faker.name.firstName(1);
+      const primaryImageIndex = getRandomInt(0, imageUrls.f.length - 1);
+      primaryImageUrl = imageUrls.f[primaryImageIndex];
+      for (let j = 0; j < numberOfSecondaryImages; ++j) {
+        let secondaryImagesIndex = getRandomInt(0, imageUrls.f.length - 1);
+        while (secondaryImagesIndex === primaryImageIndex) {
+          secondaryImagesIndex = getRandomInt(0, imageUrls.f.length - 1);
+        }
+        secondaryImagesUrl.push(imageUrls.f[secondaryImagesIndex]!);
+      }
       break;
-    case "b":
-      primaryImageUrl = imageUrls.b[getRandomInt(0, imageUrls.b.length - 1)];
+    }
+    case "b": {
       firstName = faker.name.firstName(getRandomInt(0, 1));
+      const primaryImageIndex = getRandomInt(0, imageUrls.b.length - 1);
 
+      primaryImageUrl = imageUrls.b[primaryImageIndex];
+      for (let j = 0; j < numberOfSecondaryImages; ++j) {
+        let secondaryImagesIndex = getRandomInt(0, imageUrls.b.length - 1);
+        while (secondaryImagesIndex === primaryImageIndex) {
+          secondaryImagesIndex = getRandomInt(0, imageUrls.b.length - 1);
+        }
+        secondaryImagesUrl.push(imageUrls.b[secondaryImagesIndex]!);
+      }
       break;
+    }
   }
 
   let preferencesInterests: string[] = [];
@@ -134,6 +163,7 @@ for (let i = 0; i < 300; ++i) {
     birthday,
     gender,
     primaryImageUrl,
+    secondaryImagesUrl,
     preferences,
     studentCode,
   });

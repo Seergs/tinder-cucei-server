@@ -2,7 +2,7 @@ import { ObjectType, Field, Int } from "type-graphql";
 import { Entity as TOEntity, Column, Index, OneToMany } from "typeorm";
 import Entity from "./Entity";
 import View from "./View";
-import { getAgeFromDateOfBirth } from "../util/utils";
+import { getAgeFromDateOfBirth, parseDate } from "../util/utils";
 import { Expose } from "class-transformer";
 import Match from "./Match";
 
@@ -48,7 +48,7 @@ export default class User extends Entity {
   primaryImageUrl: string;
 
   @Field(() => [String])
-  @Column("text", { array: true, nullable: true })
+  @Column("text", { array: true, default: {} })
   secondaryImagesUrl: string[];
 
   @Field(() => Preferences)
@@ -58,13 +58,14 @@ export default class User extends Entity {
   @OneToMany(() => View, (v) => v.viewer)
   views: View[];
 
+  @Field(() => [Match])
   @OneToMany(() => Match, (m) => m.userOne || m.userTwo)
   matches: Match[];
 
   @Field(() => Int)
   @Expose()
   get age(): number {
-    return getAgeFromDateOfBirth(this.birthday);
+    return getAgeFromDateOfBirth(parseDate(this.birthday));
   }
 }
 
