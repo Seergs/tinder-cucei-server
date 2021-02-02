@@ -13,6 +13,7 @@ import UserResolver from "./resolvers/userResolver";
 import PeopleResolver from "./resolvers/peopleResolver";
 import LikeResolver from "./resolvers/likeResolver";
 import MatchResolver from "./resolvers/matchResolver";
+import NotificationResolver from "./resolvers/notificationsResolver";
 import User from "./entities/User";
 
 const PORT = process.env.PORT || 5000;
@@ -22,7 +23,13 @@ async function main() {
   await connection.runMigrations();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver, PeopleResolver, LikeResolver, MatchResolver],
+    resolvers: [
+      UserResolver,
+      PeopleResolver,
+      LikeResolver,
+      MatchResolver,
+      NotificationResolver,
+    ],
     emitSchemaFile: true,
     validate: false,
   });

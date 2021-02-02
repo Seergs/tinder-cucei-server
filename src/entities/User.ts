@@ -62,6 +62,10 @@ export default class User extends Entity {
   @OneToMany(() => Match, (m) => m.userOne || m.userTwo)
   matches: Match[];
 
+  @Field()
+  @Column({ nullable: true })
+  expoPushToken: string;
+
   @Field(() => Int)
   @Expose()
   get age(): number {

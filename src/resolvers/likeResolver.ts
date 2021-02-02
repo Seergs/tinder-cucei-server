@@ -1,4 +1,5 @@
 import { Resolver, Mutation, Arg, Ctx } from "type-graphql";
+import { Expo, ExpoPushMessage } from "expo-server-sdk";
 import Match from "../entities/Match";
 import User from "../entities/User";
 import View from "../entities/View";
@@ -8,6 +9,8 @@ import {
   UserNotFoundError,
 } from "../types/graphql/likesTypes";
 import { MeResultError } from "../types/graphql/userTypes";
+
+const expo = new Expo();
 
 @Resolver()
 export default class LikeResolver {
@@ -45,6 +48,16 @@ export default class LikeResolver {
         userTwo: targetUser,
       });
       match = await newMatch.save();
+
+      if (targetUser.expoPushToken) {
+        const notification: ExpoPushMessage = {
+          to: targetUser.expoPushToken,
+          title: "Hiciste Match ♥",
+          body: `${user.firstName} te dio like también!`,
+        };
+
+        await expo.sendPushNotificationsAsync([notification]);
+      }
     }
 
     return new LikeSuccess({

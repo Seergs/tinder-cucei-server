@@ -29,7 +29,7 @@ class PeopleResolver {
     // They must be in the age range
 
     const query = `SELECT
-                      u.id, career, birthday, "firstName", "lastName", "primaryImageUrl", "secondaryImagesUrl", "preferencesInterests" as interests
+                      u.id, career, birthday, description, "firstName", "lastName", "primaryImageUrl", "secondaryImagesUrl", "preferencesInterests" as interests
                    FROM 
                       users u
                    LEFT JOIN

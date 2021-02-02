@@ -39,6 +39,9 @@ export class Person implements Partial<User> {
   lastName: string;
 
   @Field()
+  description: string;
+
+  @Field()
   primaryImageUrl: string;
 
   @Field(() => [String])

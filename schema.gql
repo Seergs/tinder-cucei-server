@@ -41,6 +41,7 @@ type Mutation {
   likePerson(targetUserId: String!): LikeResult!
   login(loginInputData: UserLoginInput!): UserLoginResult!
   register(registerInputData: UserRegisterInput!): UserRegisterResult!
+  setExpoPushToken(token: String!): Boolean!
   updatePreferences(preferences: UpdatePreferencesInput!): UpdatePreferencesResult!
 }
 
@@ -54,6 +55,7 @@ type Person {
   age: Int!
   birthday: DateTime!
   career: String!
+  description: String!
   firstName: String!
   id: String!
   interests: [String!]!
@@ -101,6 +103,7 @@ type User {
   career: String!
   createdAt: DateTime!
   description: String!
+  expoPushToken: String!
   firstName: String!
   gender: String!
   id: String!
