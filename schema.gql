@@ -43,6 +43,7 @@ type Mutation {
   register(registerInputData: UserRegisterInput!): UserRegisterResult!
   setExpoPushToken(token: String!): Boolean!
   updatePreferences(preferences: UpdatePreferencesInput!): UpdatePreferencesResult!
+  updateProfile(inputData: UpdateProfileInput!): UpdateProfileResult!
 }
 
 union PeopleResult = MeResultError | PeopleSuccess
@@ -95,6 +96,29 @@ union UpdatePreferencesResult = MeResultError | UpdatePreferencesInputError | Up
 
 type UpdatePreferencesSuccess {
   preferences: Preferences!
+}
+
+input UpdateProfileInput {
+  career: String!
+  description: String!
+  firstName: String!
+  lastName: String!
+  primaryImageUrl: String!
+  secondaryImagesUrl: [String!]!
+}
+
+type UpdateProfileInputError {
+  career: String
+  description: String
+  firstName: String
+  lastName: String
+  primaryImageUrl: String
+}
+
+union UpdateProfileResult = MeResultError | UpdateProfileInputError | UpdateProfileSuccess
+
+type UpdateProfileSuccess {
+  updated: Boolean!
 }
 
 type User {

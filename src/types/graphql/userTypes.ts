@@ -91,3 +91,62 @@ export const UpdatePreferencesResult = createUnionType({
     MeResultError,
   ],
 });
+
+@InputType()
+export class UpdateProfileInput {
+  constructor(profile: Partial<UpdateProfileInput>) {
+    Object.assign(this, profile);
+  }
+  @Field()
+  primaryImageUrl: string;
+
+  @Field(() => [String])
+  secondaryImagesUrl: string[];
+
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field()
+  career: string;
+
+  @Field()
+  description: string;
+}
+
+@ObjectType()
+export class UpdateProfileInputError {
+  constructor(errors: Partial<UpdateProfileInputError>) {
+    Object.assign(this, errors);
+  }
+  @Field({ nullable: true })
+  primaryImageUrl: string;
+
+  @Field({ nullable: true })
+  firstName: string;
+
+  @Field({ nullable: true })
+  lastName: string;
+
+  @Field({ nullable: true })
+  career: string;
+
+  @Field({ nullable: true })
+  description: string;
+}
+
+@ObjectType()
+export class UpdateProfileSuccess {
+  constructor() {
+    this.updated = true;
+  }
+  @Field()
+  updated: boolean;
+}
+
+export const UpdateProfileResult = createUnionType({
+  name: "UpdateProfileResult",
+  types: () => [MeResultError, UpdateProfileInputError, UpdateProfileSuccess],
+});

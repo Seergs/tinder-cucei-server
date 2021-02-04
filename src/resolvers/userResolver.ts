@@ -1,5 +1,7 @@
 import { Resolver, Mutation, Query, Arg, Ctx } from "type-graphql";
 import FormData from "form-data";
+import fs from "fs";
+import path from "path";
 import fetch from "node-fetch";
 import { sign } from "jsonwebtoken";
 import {
@@ -23,11 +25,15 @@ import {
   UpdatePreferencesResult,
   UpdatePreferencesInputError,
   UpdatePreferencesSuccess,
+  UpdateProfileInput,
+  UpdateProfileInputError,
+  UpdateProfileResult,
+  UpdateProfileSuccess,
 } from "../types/graphql/userTypes";
 
 import { validateSignupInputData } from "../validators/register";
 import { validateLoginInputData } from "../validators/login";
-import { validatePreferences } from "../validators/user";
+import { validatePreferences, validateProfile } from "../validators/user";
 import User from "../entities/User";
 import { parseCookies, parseDate } from "../util/utils";
 
@@ -147,6 +153,30 @@ export default class UserResolver {
       await userDb.save();
     }
     return new UpdatePreferencesSuccess(preferences);
+  }
+
+  @Mutation(() => UpdateProfileResult)
+  async updateProfile(
+    @Arg("inputData") inputData: UpdateProfileInput,
+    @Ctx("user") user: User
+  ): Promise<typeof UpdateProfileResult> {
+    if (!user) return new MeResultError("No autenticado");
+
+    const errors = validateProfile(inputData);
+    if (Object.keys(errors).length) return new UpdateProfileInputError(errors);
+
+    // Saving current images to local file to later removal
+    const pathToFile = path.join(__dirname, "../imagesToRemove.txt");
+
+    const images = [user.primaryImageUrl, ...user.secondaryImagesUrl];
+
+    images.forEach((image) => {
+      fs.appendFileSync(pathToFile, `${image}\n`);
+    });
+
+    await User.update(user.id, inputData);
+
+    return new UpdateProfileSuccess();
   }
 }
 

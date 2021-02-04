@@ -44,7 +44,7 @@ export default class User extends Entity {
   gender: string;
 
   @Field(() => String)
-  @Column({ nullable: true })
+  @Column()
   primaryImageUrl: string;
 
   @Field(() => [String])
