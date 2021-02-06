@@ -5,10 +5,10 @@ import {
   InputType,
   Int,
 } from "type-graphql";
-import { Preferences } from "../../entities/User";
+import User, { Preferences } from "../../entities/User";
 
 @ObjectType()
-export class MeResultSuccess {
+export class MeResultSuccess implements Partial<User> {
   constructor(me: Partial<MeResultSuccess>) {
     Object.assign(this, me);
   }
@@ -22,8 +22,23 @@ export class MeResultSuccess {
   @Field()
   firstName: string;
 
+  @Field()
+  lastName: string;
+
+  @Field()
+  career: string;
+
+  @Field()
+  description: string;
+
   @Field(() => Preferences)
   preferences: Preferences;
+
+  @Field()
+  primaryImageUrl: string;
+
+  @Field(() => [String])
+  secondaryImagesUrl: string[];
 }
 
 @ObjectType()
